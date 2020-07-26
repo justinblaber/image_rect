@@ -177,18 +177,11 @@ calib = api.multi_calib(imgs, cb_geom, detector, refiner)
 
 
 ```python
-api.plot_residuals(calib)
+api.plot_residuals(calib);
 ```
 
 
-
-
-    <AxesSubplot:>
-
-
-
-
-![png](README_files/README_19_1.png)
+![png](README_files/README_19_0.png)
 
 
 
@@ -812,7 +805,7 @@ Looks pretty good
 
 
 ```python
-build_notebook()
+build_notebook();
 ```
 
 
