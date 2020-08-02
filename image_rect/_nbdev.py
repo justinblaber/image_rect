@@ -12,7 +12,11 @@ index = {"save_16bit": "README.ipynb",
          "rect_homography": "README.ipynb",
          "rect_array": "README.ipynb",
          "boug_rigid_rect": "README.ipynb",
-         "boug_cam_rect": "README.ipynb"}
+         "boug_cam_rect": "README.ipynb",
+         "rigid_rect_fusi": "README.ipynb",
+         "cam_rect_fusi": "README.ipynb",
+         "rigid_rect_boug": "README.ipynb",
+         "cam_rect_boug": "README.ipynb"}
 
 modules = ["None.py",
            "image_rect.py"]
