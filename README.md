@@ -526,7 +526,7 @@ Get rectifying homographies
 def rect_homography(A, M, A_r, M_r):
     (R, t), (R_r, t_r) = map(M2Rt, [M, M_r])
     assert_allclose(t, t_r) # There can be no change in translation for rectification; only rotation
-    return A@R.T@R_r@torch.inverse(A_r)    
+    return A@R.T@R_r@torch.inverse(A_r)
 ```
 
 
@@ -610,13 +610,12 @@ def rigid_rect_boug(M1, M2):
     _,  t2 = M2Rt(M2)
     
     # First, get mid-point rotation so both cameras are aligned
-    M12 = invert_rigid(M2)@M1
-    R12, t12 = M2Rt(M12)
+    R12, t12 = M2Rt(invert_rigid(M2)@M1)
     r12 = R2rodrigues(R12)
     R12_half = rodrigues2R(r12/2)
     
     # Next, get rotation so both cameras are aligned to p1->p2
-    Rx = v_v_R(R12_half.T@t12, M12.new_tensor([-1, 0, 0]))
+    Rx = v_v_R(R12_half.T@t12, M1.new_tensor([-1, 0, 0]))
     
     # Compose to get rectified rotations
     # Note that: 
@@ -723,7 +722,7 @@ def cam_rect_boug(A1, A2, M1, M2, M1_r, M2_r, sz):
         po_nr = pmm(po_p, R_r.T@R@torch.inverse(A), aug=True)
         po_pr = po_p - pmm(A_alpha, po_nr)
         return po_pr
-    po_p = sz[[1,0]]/2  
+    po_p = (sz[[1,0]]-1)/2  
     po_pr1, po_pr2 = _get_po_pr(A1, R1, R1_r), _get_po_pr(A2, R2, R2_r)
     xo_r1, xo_r2 = po_pr1[0], po_pr2[0]
     yo_r = (po_pr1[1]+po_pr2[1])/2
@@ -744,11 +743,11 @@ A1_r, A2_r
 
 
 
-    (tensor([[ 3.5971e+03,  0.0000e+00, -8.6862e+02],
-             [ 0.0000e+00,  3.5971e+03,  7.8644e+02],
+    (tensor([[ 3.5971e+03,  0.0000e+00, -8.6848e+02],
+             [ 0.0000e+00,  3.5971e+03,  7.8647e+02],
              [ 0.0000e+00,  0.0000e+00,  1.0000e+00]], dtype=torch.float64),
-     tensor([[3.5971e+03, 0.0000e+00, 7.4849e+02],
-             [0.0000e+00, 3.5971e+03, 7.8644e+02],
+     tensor([[3.5971e+03, 0.0000e+00, 7.4850e+02],
+             [0.0000e+00, 3.5971e+03, 7.8647e+02],
              [0.0000e+00, 0.0000e+00, 1.0000e+00]], dtype=torch.float64))
 
 

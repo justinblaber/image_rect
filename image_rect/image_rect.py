@@ -73,13 +73,12 @@ def rigid_rect_boug(M1, M2):
     _,  t2 = M2Rt(M2)
 
     # First, get mid-point rotation so both cameras are aligned
-    M12 = invert_rigid(M2)@M1
-    R12, t12 = M2Rt(M12)
+    R12, t12 = M2Rt(invert_rigid(M2)@M1)
     r12 = R2rodrigues(R12)
     R12_half = rodrigues2R(r12/2)
 
     # Next, get rotation so both cameras are aligned to p1->p2
-    Rx = v_v_R(R12_half.T@t12, M12.new_tensor([-1, 0, 0]))
+    Rx = v_v_R(R12_half.T@t12, M1.new_tensor([-1, 0, 0]))
 
     # Compose to get rectified rotations
     # Note that:
@@ -107,7 +106,7 @@ def cam_rect_boug(A1, A2, M1, M2, M1_r, M2_r, sz):
         po_nr = pmm(po_p, R_r.T@R@torch.inverse(A), aug=True)
         po_pr = po_p - pmm(A_alpha, po_nr)
         return po_pr
-    po_p = sz[[1,0]]/2
+    po_p = (sz[[1,0]]-1)/2
     po_pr1, po_pr2 = _get_po_pr(A1, R1, R1_r), _get_po_pr(A2, R2, R2_r)
     xo_r1, xo_r2 = po_pr1[0], po_pr2[0]
     yo_r = (po_pr1[1]+po_pr2[1])/2
