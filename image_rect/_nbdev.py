@@ -16,7 +16,9 @@ index = {"save_16bit": "README.ipynb",
          "rigid_rect_fusi": "README.ipynb",
          "cam_rect_fusi": "README.ipynb",
          "rigid_rect_boug": "README.ipynb",
-         "cam_rect_boug": "README.ipynb"}
+         "cam_rect_boug": "README.ipynb",
+         "rectify": "README.ipynb",
+         "rect_img": "README.ipynb"}
 
 modules = ["None.py",
            "image_rect.py"]

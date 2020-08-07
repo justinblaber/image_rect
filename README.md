@@ -380,11 +380,11 @@ Appears close to zero... Lets try to plot epipolar lines
 def plot_epi(ps1, F, arr1, arr2):
     fig, axs = plt.subplots(1, 2, figsize=(20,20))
     for arr, ax in zip([arr1, arr2], axs): ax.imshow(arr, cmap='gray')
-    bb_arr2 = array_bb(arr2)    
+    b_arr2 = bb2b(array_bb(arr2))  
     cs = get_colors(len(ps1))
     for p1, c in zip(ps1, cs):
         l2 = F@augment(p1)
-        ps2_epi = bb_l_intersect(bb_arr2, l2)
+        ps2_epi = b_l_intersect(b_arr2, l2)
         axs[0].plot(p1[0], p1[1], marker='s', c=c)
         axs[1].plot(ps2_epi[:, 0], ps2_epi[:, 1], c=c)
 ```
@@ -802,6 +802,77 @@ plot_epi(pmm(ps1_u, torch.inverse(H1), aug=True), F, arr1_r, arr2_r)
 
 
 Looks pretty good
+
+# API
+
+
+```python
+# export
+def rectify(calib):
+    assert_allclose(len(calib['cams']), 2)
+    
+    As = [cam.get_param() for cam in calib['cams']]
+    Ms = [rig.get_param() for rig in calib['rigids_cam']]
+    sz = As[0].new_tensor(calib['imgs'][0].size)
+    
+    # TODO: Add option to choose different types of rectification
+    Ms_r = rigid_rect_boug(*Ms)
+    As_r = cam_rect_boug(*As, *Ms, *Ms_r, sz)
+    Hs = [rect_homography(A, M, A_r, M_r) for A, M, A_r, M_r in zip(As, Ms, As_r, Ms_r)]
+    
+    return {'Hs': Hs,
+            'As_r': As_r,
+            'Ms_r': Ms_r,
+            'cams': calib['cams'], 
+            'distorts': calib['distorts'],
+            'dtype': calib['dtype'],
+            'device': calib['device']}
+```
+
+
+```python
+# export
+def rect_img(img, rect):
+    assert_allclose(hasattr(img, 'idx_cam'), True)
+    idx = img.idx_cam
+    
+    return rect_array(img.array_gs(rect['dtype'], rect['device']),
+                      rect['Hs'][idx],
+                      rect['cams'][idx],
+                      rect['distorts'][idx])
+```
+
+
+```python
+rect = rectify(calib)
+```
+
+
+```python
+with torch.no_grad():
+    arr1_r = rect_img(img1, rect)
+    arr2_r = rect_img(img2, rect)
+```
+
+
+```python
+_, axs = plt.subplots(2, 2, figsize=(20,15))
+axs[0,0].imshow(arr1_d, cmap='gray')
+axs[0,1].imshow(arr2_d, cmap='gray')
+axs[1,0].imshow(arr1_r, cmap='gray')
+axs[1,1].imshow(arr2_r, cmap='gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff3d9bc3cf8>
+
+
+
+
+![png](README_files/README_107_1.png)
+
 
 # Build
 
