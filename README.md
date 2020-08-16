@@ -7,6 +7,7 @@
 
 ```python
 # export
+import numpy as np
 import PIL
 import torch
 from camera_calib.modules import Inverse
@@ -867,7 +868,7 @@ axs[1,1].imshow(arr2_r, cmap='gray')
 
 
 
-    <matplotlib.image.AxesImage at 0x7f6b252c0f98>
+    <matplotlib.image.AxesImage at 0x7f159ccc1ef0>
 
 
 

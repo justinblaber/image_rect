@@ -4,6 +4,7 @@ __all__ = ['save_16bit', 'distort_coords', 'undistort_array', 'get_essential', '
            'cam_rect_fusi', 'rect_homography', 'rect_array', 'rigid_rect_boug', 'cam_rect_boug', 'rectify', 'rect_img']
 
 # Cell
+import numpy as np
 import PIL
 import torch
 from camera_calib.modules import Inverse
