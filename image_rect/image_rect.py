@@ -6,6 +6,7 @@ __all__ = ['save_16bit', 'distort_coords', 'undistort_array', 'get_essential', '
 # Cell
 import PIL
 import torch
+from camera_calib.modules import Inverse
 from camera_calib.utils import *
 
 # Cell

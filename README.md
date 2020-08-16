@@ -9,6 +9,7 @@
 # export
 import PIL
 import torch
+from camera_calib.modules import Inverse
 from camera_calib.utils import *
 ```
 
@@ -20,7 +21,7 @@ from pathlib import Path
 import camera_calib.api as api
 import matplotlib.pyplot as plt
 import scipy
-from camera_calib.modules import Inverse, Rigids
+from camera_calib.modules import Rigids
 from camera_calib.plot import plot_extrinsics
 from camera_calib.utils import *
 ```
@@ -866,7 +867,7 @@ axs[1,1].imshow(arr2_r, cmap='gray')
 
 
 
-    <matplotlib.image.AxesImage at 0x7ff3d9bc3cf8>
+    <matplotlib.image.AxesImage at 0x7f6b252c0f98>
 
 
 
